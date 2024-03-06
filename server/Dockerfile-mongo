@@ -1,0 +1,8 @@
+# Use the official MongoDB image as the base image
+FROM mongo:7.0.6
+
+# Copy the JSON file to import into the container
+COPY Cruds.json /tmp/Cruds.json
+
+# Import the JSON file into the MongoDB instance when the container starts
+CMD mongoimport --host mongodb --db mern-crud --collection mern-crud --type json --file /tmp/Cruds.json --jsonArray

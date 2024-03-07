@@ -9,6 +9,26 @@ aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 aws configure set region $AWS_REGION
 ```
+### Provision EKS cluster
+```console
+cd terraform-provisioning
+terraform init
+terraform validate
+terraform plan
+terrform apply
+```
+*Notice:* We need to keep our tfstate file in S3 bucket for Concurrency, Security, Remote Locking Purpose
+### Install MERN-CRUD application on EKS Cluster
+```console
+cd mongodb
+helm install mongo --set auth.enabled=false,replicaSet.enabled=true,service.type=LoadBalancer,replicaSet.replicas.secondary=3 bitnami/mongodb
+cd -
+cd server
+helm install backend backend/chart/backend
+cd -
+cd client
+helm install frontend frontend/chart/frontend
+```
 ### Install ArgoCD on your cluster
 Configure as per ArgoCD document [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 ### Install ELK stack in your cluster for Log Monitoring Purpose

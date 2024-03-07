@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/*  # Trigger on feature branches
   pull_request:
     branches:
       - main
@@ -11,25 +12,58 @@ on:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      
+
       - name: Build and push Client Docker image
+        working-directory: client
         run: |
-          cd client
-          docker build -t jslbikash/mern-crud:client-$GITHUB_SHA .
-          docker push jslbikash/mern-crud:client-$GITHUB_SHA
-      
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/client:$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/client:$GITHUB_SHA
+
       - name: Build and push Server Docker image
+        working-directory: server
         run: |
-          cd server
-          docker build -t jslbikash/mern-crud:server-$GITHUB_SHA .
-          docker push jslbikash/mern-crud:server-$GITHUB_SHA
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/server:$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/server:$GITHUB_SHA
+
+  deploy_dev:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to DEV
+        run: |
+          # Add deployment command here for DEV environment
+
+  deploy_stg:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Deploy to STG
+        run: |
+          # Add deployment command here for STG environment
+
+  deploy_prod:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Update Image tag
+        run: |
+          sed -i 's/^imageTag: .*/imageTag: ${{ github.sha }}/g' ./client/values.yaml
+          sed -i 's/^imageTag: .*/imageTag: ${{ github.sha }}/g' ./server/values.yaml
+          git config --global user.email "bikash.bhandari1986@gmail.com"
+          git config --global user.name "Bikash Bhandari"
+          git add ./client/values.yaml
+          git add ./server/values.yaml
+          git commit -m "Updating image tag with latest build number."
+          
+      - name: Deploy to PROD
+        run: |
+          # Add deployment command here for PROD environment

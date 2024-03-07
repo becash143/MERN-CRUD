@@ -62,7 +62,8 @@ helm install alab-grafana --kubeconfig /etc/rancher/k3s/k3s.yaml grafana/grafana
 kubectl get secret --namespace default alab-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 ## Enahancing Security for API keys and credentials
-This can be achived by using secrets resources  for all credentials; AWS Secret Manager or Hashicorp Vault can be used for this purpose. 
+This can be achived by using secrets resources  for all credentials; AWS Secret Manager or Hashicorp Vault can be used for this purpose.
+In our case we are using secrets to store mongoDB credentials. 
 
 ### For Autoscaling we can implement hpa on deployment resources. Further, this can be customized based on any http request, meaning we can add more node or reduce node based on the http requests or based on any triggered events.
 ### This is an example how can be manage node group based on event.
@@ -99,4 +100,11 @@ data:
       }
     }
 ```
+### How CI/CD Pipeline works
+### Workflow details is defined in the .github/workflows/ci-cd.yaml
+1. On any pull request on the main branch , the build triggers. 
+2. Creates Images for frontend, backend service. For mongoDB, we will be using official image, since we are not customizing it. Cruds.json is  copied into mongoDn using configmap.
+3. Images are created and pushed into DockerHub for DEV, STG and PROD.
+4. Images tag are then updated on the github repository using sed command in the github action workflow
+5. Based on the tag changes, ArgoCD applies the new image tag on the cluster to apply the latest changes.
 ### On modifying the image tag in values.yaml, ARGO CD automatically deploys new image on the cluster.   

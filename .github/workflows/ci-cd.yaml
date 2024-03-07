@@ -25,11 +25,11 @@ jobs:
       - name: Build and push Client Docker image
         run: |
           cd client
-          docker build -t jslbikash/mern-crud:client:$GITHUB_SHA .
-          docker push jslbikash/mern-crud:client:$GITHUB_SHA
+          docker build -t jslbikash/mern-crud:client-$GITHUB_SHA .
+          docker push jslbikash/mern-crud:client-$GITHUB_SHA
       
       - name: Build and push Server Docker image
         run: |
           cd server
-          docker build -t jslbikash/mern-crud/server:$GITHUB_SHA .
-          docker push jslbikash/mern-crud/server:$GITHUB_SHA
+          docker build -t jslbikash/mern-crud:server-$GITHUB_SHA .
+          docker push jslbikash/mern-crud:server-$GITHUB_SHA

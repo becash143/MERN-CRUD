@@ -1,8 +1,8 @@
 replicaCount: 1
 revisionHistoryLimit: 1
 image:
-  repository: frontend
-  tag: v1.0.0
+  repository: jslbikash/mern-crud
+  tag: client-v1.0.0
   pullPolicy: IfNotPresent
   resources:
     requests:

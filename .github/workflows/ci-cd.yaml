@@ -20,14 +20,14 @@ jobs:
       - name: Build and push Client Docker image
         working-directory: client
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/client:$GITHUB_SHA .
-          docker push ${{ secrets.DOCKER_USERNAME }}/client:$GITHUB_SHA
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:client-$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:client-$GITHUB_SHA
 
       - name: Build and push Server Docker image
         working-directory: server
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/server:$GITHUB_SHA .
-          docker push ${{ secrets.DOCKER_USERNAME }}/server:$GITHUB_SHA
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:server-$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}mern-crud:server-$GITHUB_SHA
 
   deploy_dev:
     runs-on: ubuntu-latest
@@ -36,7 +36,13 @@ jobs:
     steps:
       - name: Deploy to DEV
         run: |
-          # Add deployment command here for DEV environment
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:dev-client$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:dev-client-$GITHUB_SHA
+      - name: Build and push Server Docker image
+        working-directory: server
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:dev-server-$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:dev-server-$GITHUB_SHA
 
   deploy_stg:
     runs-on: ubuntu-latest
@@ -46,8 +52,13 @@ jobs:
     steps:
       - name: Deploy to STG
         run: |
-          # Add deployment command here for STG environment
-
+         docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-client$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-client-$GITHUB_SHA
+      - name: Build and push Server Docker image
+        working-directory: server
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-server-$GITHUB_SHA .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-server-$GITHUB_SHA
   deploy_prod:
     runs-on: ubuntu-latest
     needs: build_and_push

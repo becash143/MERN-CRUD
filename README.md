@@ -24,10 +24,10 @@ cd mongodb
 helm install mongo --set auth.enabled=false,replicaSet.enabled=true,service.type=LoadBalancer,replicaSet.replicas.secondary=3 bitnami/mongodb
 cd -
 cd server
-helm install backend backend/chart/backend
+helm install backend server/chart/backend
 cd -
 cd client
-helm install frontend frontend/chart/frontend
+helm install frontend client/chart/frontend
 ```
 ### Install ArgoCD on your cluster
 Configure as per ArgoCD document [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).

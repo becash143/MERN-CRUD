@@ -53,7 +53,7 @@ jobs:
       - name: Deploy to STG
         run: |
          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-client$GITHUB_SHA .
-          docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-client-$GITHUB_SHA
+         docker push ${{ secrets.DOCKER_USERNAME }}/mern-crud:stg-client-$GITHUB_SHA
       - name: Build and push Server Docker image
         working-directory: server
         run: |
@@ -75,6 +75,3 @@ jobs:
           git add ./server/values.yaml
           git commit -m "Updating image tag with latest build number."
           
-      - name: Deploy to PROD
-        run: |
-          # Add deployment command here for PROD environment

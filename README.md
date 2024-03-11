@@ -20,13 +20,8 @@ terrform apply
 *Notice:* We need to keep our tfstate file in S3 bucket for Concurrency, Security, Remote Locking Purpose
 ### Install MERN-CRUD application on EKS Cluster
 ```console
-cd mongodb
-helm install mongo --set auth.enabled=false,replicaSet.enabled=true,service.type=LoadBalancer,replicaSet.replicas.secondary=3 bitnami/mongodb
-cd -
-cd server
+helm install mongo --set auth.enabled=false,replicaSet.enabled=true,service.type=LoadBalancer,replicaSet.replicas.secondary=3 mongodb/mongodb
 helm install backend server/chart/backend
-cd -
-cd client
 helm install frontend client/chart/frontend
 ```
 ### Install ArgoCD on your cluster
